@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}The Terrarium{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #08090d;
+      --bg2:       #0e1018;
+      --bg3:       #141720;
+      --border:    rgba(255,255,255,0.07);
+      --text:      #d4d8e8;
+      --dim:       #5a607a;
+      --accent:    #7cffd4;
+      --accent2:   #a78bfa;
+      --warn:      #fbbf24;
+      --danger:    #f87171;
+      --good:      #34d399;
+      --glow:      rgba(124,255,212,0.15);
+      --mono:      'DM Mono', monospace;
+      --serif:     'Fraunces', serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Grain overlay ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; align-items: center; gap: 0;
+      padding: 0 32px;
+      height: 52px;
+      background: rgba(8,9,13,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 18px;
+      color: var(--accent);
+      text-decoration: none;
+      margin-right: 40px;
+      letter-spacing: -0.02em;
+    }
+
+    nav a {
+      color: var(--dim);
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 4px;
+      transition: color 0.2s, background 0.2s;
+    }
+    nav a:hover { color: var(--text); }
+    nav a.active { color: var(--accent); background: rgba(124,255,212,0.06); }
+
+    .nav-status {
+      margin-left: auto;
+      display: flex; align-items: center; gap: 8px;
+      font-size: 11px; color: var(--dim);
+    }
+    .status-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--dim);
+      transition: background 0.5s, box-shadow 0.5s;
+    }
+    .status-dot.live {
+      background: var(--good);
+      box-shadow: 0 0 8px var(--good);
+      animation: pulse-dot 2s infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* ── PAGE WRAPPER ── */
+    .page { padding: 80px 32px 60px; max-width: 1100px; margin: 0 auto; }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .card-sm { padding: 16px 20px; }
+
+    /* ── LABELS ── */
+    .label {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 6px;
+    }
+
+    /* ── ACCENT TEXT ── */
+    .val-big {
+      font-family: var(--serif);
+      font-size: 36px;
+      font-weight: 300;
+      color: var(--accent);
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .val-good { color: var(--good); }
+    .val-warn { color: var(--warn); }
+    .val-dim  { color: var(--dim); }
+
+    /* ── TAG ── */
+    .tag {
+      display: inline-block;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+      border: 1px solid;
+    }
+    .tag-green  { color: var(--good);   border-color: rgba(52,211,153,0.3);  background: rgba(52,211,153,0.06); }
+    .tag-purple { color: var(--accent2); border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.06); }
+    .tag-yellow { color: var(--warn);   border-color: rgba(251,191,36,0.3);  background: rgba(251,191,36,0.06); }
+    .tag-red    { color: var(--danger); border-color: rgba(248,113,113,0.3); background: rgba(248,113,113,0.06); }
+    .tag-dim    { color: var(--dim);    border-color: rgba(90,96,122,0.3);   background: rgba(90,96,122,0.06); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 32px;
+      font-size: 11px;
+      color: var(--dim);
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+    footer span { margin-left: auto; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 2px; }
+
+    {% block extra_css %}{% endblock %}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">The Terrarium</a>
+  <a href="/" class="{% if request.path == '/' %}active{% endif %}">Terrarium</a>
+  <a href="/runs" class="{% if request.path == '/runs' %}active{% endif %}">Runs</a>
+  <a href="/info" class="{% if request.path == '/info' %}active{% endif %}">Info</a>
+  <div class="nav-status">
+    <div class="status-dot" id="nav-dot"></div>
+    <span id="nav-status-text">—</span>
+  </div>
+</nav>
+
+{% block content %}{% endblock %}
+
+<footer>
+  <span>The Terrarium</span>
+  <span>Bloom · 63.6M params · RTX 5060</span>
+  <span id="footer-updated">—</span>
+</footer>
+
+<script>
+  // Live status polling for nav
+  async function pollStatus() {
+    try {
+      const r = await fetch('/api/status');
+      const d = await r.json();
+      const dot = document.getElementById('nav-dot');
+      const txt = document.getElementById('nav-status-text');
+      const fu  = document.getElementById('footer-updated');
+      if (d.training) {
+        dot.classList.add('live');
+        txt.textContent = 'training live';
+      } else {
+        dot.classList.remove('live');
+        const mins = Math.floor((d.updated_ago || 0) / 60);
+        txt.textContent = mins < 60 ? `updated ${mins}m ago` : 'sleeping';
+      }
+      if (d.best_val) {
+        fu.textContent = `best val loss: ${d.best_val.toFixed(4)}`;
+      }
+    } catch(e) {}
+  }
+  pollStatus();
+  setInterval(pollStatus, 30000);
+</script>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>

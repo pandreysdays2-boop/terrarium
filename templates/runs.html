@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+{% block title %}Runs — The Terrarium{% endblock %}
+
+{% block extra_css %}
+.runs-header {
+  margin-bottom: 36px;
+  animation: fadeUp 0.5s ease both;
+}
+.runs-header h1 {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 40px;
+  font-weight: 300;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+.runs-header p { color: var(--dim); font-size: 12px; }
+
+.run-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px 32px;
+  margin-bottom: 16px;
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 24px;
+  align-items: start;
+  transition: border-color 0.2s;
+  animation: fadeUp 0.5s ease both;
+}
+.run-card:hover { border-color: rgba(255,255,255,0.12); }
+.run-card:nth-child(2) { animation-delay: 0.1s; }
+.run-card:nth-child(3) { animation-delay: 0.2s; }
+
+.run-number {
+  font-family: var(--serif);
+  font-size: 48px;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--dim);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.run-number.best { color: var(--accent); }
+
+.run-body {}
+.run-title {
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.run-sub {
+  font-size: 11px;
+  color: var(--dim);
+  margin-bottom: 12px;
+}
+.run-notes {
+  font-size: 11px;
+  color: var(--dim);
+  line-height: 1.7;
+  margin-bottom: 16px;
+  max-width: 600px;
+}
+
+.run-sample {
+  background: var(--bg3);
+  border-left: 2px solid var(--border);
+  padding: 12px 16px;
+  font-size: 11px;
+  color: var(--dim);
+  line-height: 1.8;
+  border-radius: 0 6px 6px 0;
+  font-style: italic;
+  max-width: 600px;
+}
+.run-sample::before {
+  content: 'Generated text sample';
+  display: block;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--dim);
+  opacity: 0.5;
+  font-style: normal;
+  margin-bottom: 6px;
+}
+
+.run-metric {
+  text-align: right;
+}
+.run-metric .big {
+  font-family: var(--serif);
+  font-size: 32px;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+.run-metric .big.best-val { color: var(--accent); }
+.run-metric .meta {
+  font-size: 10px;
+  color: var(--dim);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.overall-best {
+  background: rgba(124,255,212,0.04);
+  border: 1px solid rgba(124,255,212,0.15);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 12px;
+  animation: fadeUp 0.3s ease both;
+}
+.overall-best .label { color: var(--dim); }
+.overall-best .val {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 28px;
+  color: var(--accent);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+}
+.overall-best .arrow {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--dim);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+{% endblock %}
+
+{% block content %}
+<div class="page">
+
+  <div class="runs-header">
+    <h1>Training runs</h1>
+    <p>Every run Bloom has ever trained — best checkpoints, notes, and generated text samples.</p>
+  </div>
+
+  <div class="overall-best">
+    <div>
+      <div class="label">All-time best val loss</div>
+      <div class="val">3.4735</div>
+    </div>
+    <div style="color:var(--dim);font-size:11px;">
+      Run 17 · Stage 2 · Mid<br>
+      <span style="color:var(--dim);opacity:0.6;">Target: 3.3 &nbsp;·&nbsp; △ 0.1735 to go</span>
+    </div>
+    <div class="arrow">Bloom's best → Run 17 ↓</div>
+  </div>
+
+  {% for run in runs %}
+  <div class="run-card">
+    <div class="run-number {% if run.best_val == 3.4735 %}best{% endif %}">
+      {{ run.id }}
+    </div>
+    <div class="run-body">
+      <div class="run-title">
+        {{ run.name }}
+        {% if run.status == 'complete' %}
+          <span class="tag tag-green">complete</span>
+        {% elif run.status == 'aborted' %}
+          <span class="tag tag-red">aborted</span>
+        {% else %}
+          <span class="tag tag-yellow">{{ run.status }}</span>
+        {% endif %}
+        {% if run.best_val == 3.4735 %}
+          <span class="tag tag-green">★ best ever</span>
+        {% endif %}
+      </div>
+      <div class="run-sub">{{ run.stage }} · {{ run.start }}</div>
+      <div class="run-notes">{{ run.notes }}</div>
+      {% if run.sample_text %}
+      <div class="run-sample">{{ run.sample_text }}</div>
+      {% endif %}
+    </div>
+    <div class="run-metric">
+      <div class="big {% if run.best_val == 3.4735 %}best-val{% endif %}">
+        {{ '%.4f'|format(run.best_val) }}
+      </div>
+      <div class="meta">best val loss</div>
+    </div>
+  </div>
+  {% endfor %}
+
+</div>
+{% endblock %}

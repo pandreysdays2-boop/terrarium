@@ -1,0 +1,572 @@
+{% extends "base.html" %}
+{% block title %}The Terrarium — Bloom{% endblock %}
+
+{% block extra_css %}
+.terrarium-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 16px;
+  align-items: start;
+}
+
+/* ── Hero header ── */
+.hero {
+  margin-bottom: 28px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.hero-left h1 {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 52px;
+  font-weight: 300;
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-bottom: 6px;
+}
+.hero-left p {
+  color: var(--dim);
+  font-size: 12px;
+  max-width: 460px;
+  line-height: 1.7;
+}
+.hero-right {
+  text-align: right;
+}
+.hero-right .big-loss {
+  font-family: var(--serif);
+  font-size: 72px;
+  font-weight: 300;
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+.hero-right .loss-label {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-top: 4px;
+}
+
+/* ── Status bar ── */
+.bloom-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  margin-bottom: 16px;
+  font-size: 12px;
+}
+.bloom-status .dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--dim);
+  flex-shrink: 0;
+}
+.bloom-status .dot.training {
+  background: var(--good);
+  box-shadow: 0 0 10px var(--good);
+  animation: pulse-dot 1.5s infinite;
+}
+.bloom-status .dot.sleeping {
+  background: var(--accent2);
+}
+.status-msg { color: var(--text); }
+.status-detail { color: var(--dim); margin-left: auto; }
+
+/* ── Chart card ── */
+.chart-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+.chart-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--dim);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.chart-legend {
+  display: flex;
+  gap: 16px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  color: var(--dim);
+}
+.legend-dot {
+  width: 8px; height: 2px;
+  border-radius: 1px;
+}
+.chart-wrap {
+  position: relative;
+  height: 220px;
+}
+.chart-wrap-sm {
+  position: relative;
+  height: 100px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.chart-sub-label {
+  font-size: 10px;
+  color: var(--dim);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+/* ── Sidebar stats ── */
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.stat-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.stat-box .s-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--dim);
+  margin-bottom: 6px;
+}
+.stat-box .s-val {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--text);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.stat-box .s-sub {
+  font-size: 10px;
+  color: var(--dim);
+  margin-top: 3px;
+}
+
+/* ── Stage card ── */
+.stage-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 10px;
+}
+.stage-name {
+  font-size: 11px;
+  color: var(--text);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.stage-bar-wrap {
+  height: 4px;
+  background: var(--bg3);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+.stage-bar {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--accent);
+  transition: width 1s ease;
+}
+.stage-bar.s2 { background: var(--accent2); }
+.stage-steps {
+  font-size: 10px;
+  color: var(--dim);
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ── Sample notice ── */
+.sample-notice {
+  display: none;
+  font-size: 11px;
+  color: var(--warn);
+  padding: 8px 14px;
+  border: 1px solid rgba(251,191,36,0.2);
+  background: rgba(251,191,36,0.04);
+  border-radius: 6px;
+  margin-bottom: 14px;
+}
+
+/* ── Recent points table ── */
+.points-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+.points-table th {
+  text-align: left;
+  color: var(--dim);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 400;
+}
+.points-table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  color: var(--text);
+}
+.points-table tr:last-child td { border-bottom: none; }
+.points-table .best-row td { color: var(--accent); }
+.td-mono { font-variant-numeric: tabular-nums; }
+
+/* ── Page load animation ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero        { animation: fadeUp 0.5s ease both; }
+.bloom-status { animation: fadeUp 0.5s 0.1s ease both; }
+.terrarium-grid { animation: fadeUp 0.5s 0.2s ease both; }
+{% endblock %}
+
+{% block content %}
+<div class="page">
+
+  <div class="hero">
+    <div class="hero-left">
+      <h1>Bloom</h1>
+      <p>A 63.6M parameter GPT trained from scratch on classic literature — watched live, one val loss at a time.</p>
+    </div>
+    <div class="hero-right">
+      <div class="big-loss" id="hero-loss">—</div>
+      <div class="loss-label">all-time best val loss</div>
+    </div>
+  </div>
+
+  <div class="sample-notice" id="sample-notice">
+    ⚠ Bloom is not currently training — showing sample data. Start a run to see live metrics.
+  </div>
+
+  <div class="bloom-status">
+    <div class="dot" id="status-dot"></div>
+    <span class="status-msg" id="status-msg">Loading…</span>
+    <span class="status-detail" id="status-detail"></span>
+  </div>
+
+  <div class="terrarium-grid">
+    <!-- LEFT: charts -->
+    <div>
+      <div class="chart-card">
+        <div class="chart-title">
+          Loss curves
+          <div class="chart-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#7cffd4"></div>train</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#a78bfa"></div>val</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#34d399;opacity:0.5;border-top:1px dashed #34d399;height:0;width:12px;margin-top:1px;"></div>best val</div>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="lossChart"></canvas>
+        </div>
+        <div class="chart-wrap-sm">
+          <div class="chart-sub-label">Overfit gap (val − train)</div>
+          <canvas id="gapChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Recent data points -->
+      <div class="chart-card">
+        <div class="chart-title">Recent checkpoints</div>
+        <table class="points-table">
+          <thead>
+            <tr>
+              <th>Step</th>
+              <th>Train</th>
+              <th>Val</th>
+              <th>Gap</th>
+              <th>Stage</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody id="points-tbody">
+            <tr><td colspan="6" style="color:var(--dim);text-align:center;padding:20px;">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- RIGHT: sidebar -->
+    <div>
+      <div class="stat-grid">
+        <div class="stat-box">
+          <div class="s-label">Best val</div>
+          <div class="s-val" id="sb-best">—</div>
+          <div class="s-sub">all time</div>
+        </div>
+        <div class="stat-box">
+          <div class="s-label">Current val</div>
+          <div class="s-val" id="sb-val">—</div>
+          <div class="s-sub">latest eval</div>
+        </div>
+        <div class="stat-box">
+          <div class="s-label">Step</div>
+          <div class="s-val" id="sb-step">—</div>
+          <div class="s-sub" id="sb-stage-sub">—</div>
+        </div>
+        <div class="stat-box">
+          <div class="s-label">Gap</div>
+          <div class="s-val" id="sb-gap">—</div>
+          <div class="s-sub">val − train</div>
+        </div>
+      </div>
+
+      <!-- Stage progress -->
+      <div class="card card-sm" style="margin-bottom:16px;">
+        <div class="label" style="margin-bottom:12px;">Pipeline progress</div>
+        <div class="stage-card">
+          <div class="stage-name">
+            Stage 1 · Pretrain
+            <span class="tag tag-green" id="s1-tag">—</span>
+          </div>
+          <div class="stage-bar-wrap">
+            <div class="stage-bar" id="s1-bar" style="width:0%"></div>
+          </div>
+          <div class="stage-steps">
+            <span id="s1-steps">0 steps</span>
+            <span>15,000 target</span>
+          </div>
+        </div>
+        <div class="stage-card">
+          <div class="stage-name">
+            Stage 2 · Mid
+            <span class="tag tag-purple" id="s2-tag">—</span>
+          </div>
+          <div class="stage-bar-wrap">
+            <div class="stage-bar s2" id="s2-bar" style="width:0%"></div>
+          </div>
+          <div class="stage-steps">
+            <span id="s2-steps">0 steps</span>
+            <span>60,000 target</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Architecture -->
+      <div class="card card-sm" style="margin-bottom:16px;">
+        <div class="label" style="margin-bottom:12px;">Architecture</div>
+        <table style="width:100%;font-size:11px;border-collapse:collapse;">
+          <tr><td style="color:var(--dim);padding:3px 0;">Params</td><td style="text-align:right;color:var(--text);">63.6M</td></tr>
+          <tr><td style="color:var(--dim);padding:3px 0;">Layers</td><td style="text-align:right;color:var(--text);">12</td></tr>
+          <tr><td style="color:var(--dim);padding:3px 0;">Heads</td><td style="text-align:right;color:var(--text);">8</td></tr>
+          <tr><td style="color:var(--dim);padding:3px 0;">Embed dim</td><td style="text-align:right;color:var(--text);">512</td></tr>
+          <tr><td style="color:var(--dim);padding:3px 0;">Block size</td><td style="text-align:right;color:var(--text);">128</td></tr>
+          <tr><td style="color:var(--dim);padding:3px 0;">Tokenizer</td><td style="text-align:right;color:var(--text);">GPT-2 BPE</td></tr>
+          <tr><td style="color:var(--dim);padding:3px 0;">Hardware</td><td style="text-align:right;color:var(--text);">RTX 5060 · 8GB VRAM</td></tr>
+        </table>
+      </div>
+
+      <!-- Target scale -->
+      <div class="card card-sm">
+        <div class="label" style="margin-bottom:12px;">Val loss quality scale</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="color:var(--dim);font-size:11px;">4.5</span>
+            <span style="font-size:10px;color:var(--dim);">Stage 1 territory</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="color:var(--dim);font-size:11px;">3.7</span>
+            <span style="font-size:10px;color:var(--dim);">Coherent passages</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="color:var(--warn);font-size:11px;">3.5</span>
+            <span style="font-size:10px;color:var(--warn);">Approaching GPT-2 small</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 8px;background:rgba(124,255,212,0.05);border:1px solid rgba(124,255,212,0.15);border-radius:6px;">
+            <span style="color:var(--accent);font-size:12px;font-family:var(--serif);font-style:italic;">3.3</span>
+            <span style="font-size:10px;color:var(--accent);">← Bloom's target</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="color:var(--good);font-size:11px;">3.0</span>
+            <span style="font-size:10px;color:var(--good);">Scary good</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+const CHART_DEFAULTS = {
+  responsive: true, maintainAspectRatio: false, animation: false,
+  plugins: { legend: { display: false }, tooltip: {
+    backgroundColor: '#141720',
+    borderColor: 'rgba(255,255,255,0.07)',
+    borderWidth: 1,
+    titleColor: '#5a607a',
+    bodyColor: '#d4d8e8',
+    padding: 10,
+    titleFont: { family: "'DM Mono', monospace", size: 10 },
+    bodyFont: { family: "'DM Mono', monospace", size: 11 },
+  }},
+  scales: {
+    x: { ticks: { color: '#3a4060', font: { size: 9, family: "'DM Mono',monospace" }, maxTicksLimit: 8 }, grid: { color: 'rgba(255,255,255,0.03)' }, border: { color: 'rgba(255,255,255,0.05)' } },
+    y: { ticks: { color: '#3a4060', font: { size: 9, family: "'DM Mono',monospace" }, maxTicksLimit: 5 }, grid: { color: 'rgba(255,255,255,0.03)' }, border: { color: 'rgba(255,255,255,0.05)' } },
+  }
+};
+
+const lossChart = new Chart(document.getElementById('lossChart').getContext('2d'), {
+  type: 'line',
+  data: { labels: [], datasets: [
+    { label: 'Train', data: [], borderColor: '#7cffd4', backgroundColor: 'rgba(124,255,212,0.04)', borderWidth: 1.5, pointRadius: 0, tension: 0.3, fill: true },
+    { label: 'Val',   data: [], borderColor: '#a78bfa', backgroundColor: 'rgba(167,139,250,0.04)', borderWidth: 1.5, pointRadius: 0, tension: 0.3, fill: true },
+    { label: 'Best',  data: [], borderColor: '#34d399', backgroundColor: 'transparent', borderWidth: 1, borderDash: [4,4], pointRadius: 0, tension: 0.3, fill: false },
+  ]},
+  options: CHART_DEFAULTS,
+});
+
+const gapChart = new Chart(document.getElementById('gapChart').getContext('2d'), {
+  type: 'line',
+  data: { labels: [], datasets: [
+    { label: 'Gap', data: [], borderColor: '#fbbf24', backgroundColor: 'rgba(251,191,36,0.05)', borderWidth: 1.5, pointRadius: 0, tension: 0.3, fill: true },
+  ]},
+  options: { ...CHART_DEFAULTS, scales: { ...CHART_DEFAULTS.scales, y: { ...CHART_DEFAULTS.scales.y, suggestedMin: 0 } } },
+});
+
+function fmtTime(ts) {
+  const d = new Date(ts * 1000);
+  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+function fmtStepK(n) {
+  return n >= 1000 ? (n/1000).toFixed(1) + 'k' : String(n);
+}
+
+async function loadData() {
+  const r = await fetch('/api/graph_log');
+  const d = await r.json();
+  const pts = d.points || [];
+  if (!pts.length) return;
+
+  const isSample = d._is_sample;
+  if (isSample) document.getElementById('sample-notice').style.display = 'block';
+
+  // Charts
+  const labels    = pts.map(p => fmtStepK(p.step));
+  const trainData = pts.map(p => p.train);
+  const valData   = pts.map(p => p.val);
+  const bestData  = pts.map(p => p.best_val);
+  const gapData   = pts.map(p => parseFloat((p.val - p.train).toFixed(4)));
+
+  lossChart.data.labels                 = labels;
+  lossChart.data.datasets[0].data      = trainData;
+  lossChart.data.datasets[1].data      = valData;
+  lossChart.data.datasets[2].data      = bestData;
+  lossChart.update('none');
+
+  gapChart.data.labels                  = labels;
+  gapChart.data.datasets[0].data       = gapData;
+  gapChart.update('none');
+
+  // Hero
+  if (d.best_val) {
+    document.getElementById('hero-loss').textContent = d.best_val.toFixed(4);
+    document.getElementById('sb-best').textContent   = d.best_val.toFixed(4);
+  }
+
+  // Recent table (last 8)
+  const recent = [...pts].reverse().slice(0, 8);
+  const tbody = document.getElementById('points-tbody');
+  tbody.innerHTML = recent.map((p, i) => {
+    const isBest = p.val <= d.best_val + 0.001;
+    const gap = (p.val - p.train).toFixed(4);
+    const gapColor = parseFloat(gap) > 0.3 ? 'var(--danger)' : parseFloat(gap) > 0.1 ? 'var(--warn)' : 'var(--good)';
+    return `<tr class="${i===0&&!isSample?'best-row':''}">
+      <td class="td-mono">${fmtStepK(p.step)}</td>
+      <td class="td-mono">${p.train.toFixed(4)}</td>
+      <td class="td-mono" style="color:${isBest?'var(--accent)':'inherit'}">${p.val.toFixed(4)}${isBest?' ★':''}</td>
+      <td class="td-mono" style="color:${gapColor}">${gap}</td>
+      <td style="color:var(--dim);font-size:10px;">${p.stage.replace('Stage ','S')}</td>
+      <td style="color:var(--dim)">${fmtTime(p.ts)}</td>
+    </tr>`;
+  }).join('');
+
+  // Sidebar stats
+  const last = pts[pts.length - 1];
+  document.getElementById('sb-val').textContent  = last.val.toFixed(4);
+  document.getElementById('sb-step').textContent = fmtStepK(last.step);
+  document.getElementById('sb-gap').textContent  = (last.val - last.train).toFixed(4);
+
+  // Stage pills
+  const stage = d.stage || '';
+  if (stage.includes('1')) {
+    document.getElementById('s1-tag').textContent = 'active';
+    document.getElementById('s1-tag').className   = 'tag tag-green';
+    document.getElementById('s2-tag').textContent = 'waiting';
+    document.getElementById('s2-tag').className   = 'tag tag-dim';
+  } else if (stage.includes('2')) {
+    document.getElementById('s1-tag').textContent = 'done';
+    document.getElementById('s1-tag').className   = 'tag tag-dim';
+    document.getElementById('s2-tag').textContent = 'active';
+    document.getElementById('s2-tag').className   = 'tag tag-purple';
+  }
+
+  // Stage bars — estimate from step
+  const s1steps = Math.min(last.step, 15000);
+  const s2steps = Math.max(0, last.step - 15000);
+  document.getElementById('s1-bar').style.width   = (s1steps/15000*100).toFixed(1) + '%';
+  document.getElementById('s2-bar').style.width   = (Math.min(s2steps,60000)/60000*100).toFixed(1) + '%';
+  document.getElementById('s1-steps').textContent = fmtStepK(s1steps) + ' steps';
+  document.getElementById('s2-steps').textContent = fmtStepK(s2steps) + ' steps';
+  document.getElementById('sb-stage-sub').textContent = stage;
+}
+
+async function pollStatus() {
+  const r = await fetch('/api/status');
+  const d = await r.json();
+  const dot = document.getElementById('status-dot');
+  const msg = document.getElementById('status-msg');
+  const det = document.getElementById('status-detail');
+  if (d.training) {
+    dot.className = 'dot training';
+    msg.textContent = 'Bloom is eating — training live';
+    det.textContent = `step ${d.step?.toLocaleString()} · val ${d.val?.toFixed(4)}`;
+  } else {
+    dot.className = 'dot sleeping';
+    const mins = Math.floor((d.updated_ago || 0) / 60);
+    msg.textContent = 'Bloom is sleeping';
+    det.textContent = mins > 0 ? `last updated ${mins}m ago` : 'just updated';
+  }
+}
+
+loadData();
+pollStatus();
+setInterval(loadData, 60000);
+setInterval(pollStatus, 30000);
+</script>
+{% endblock %}
