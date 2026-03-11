@@ -1,10 +1,67 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 32 32"
+   version="1.1"
+   id="svg2"
+   sodipodi:docname="favicon.svg"
+   inkscape:version="1.4.2 (ebf0e940d0, 2025-05-08)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="namedview2"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="17.942835"
+     inkscape:cx="18.475342"
+     inkscape:cy="13.041418"
+     inkscape:window-width="1920"
+     inkscape:window-height="1015"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
   <!-- dark background circle -->
-  <circle cx="16" cy="16" r="16" fill="#08090d"/>
+  <circle
+     cx="16"
+     cy="16"
+     r="16"
+     fill="#08090d"
+     id="circle1" />
   <!-- leaf shape -->
-  <path d="M16 6 C24 6 26 14 20 20 C17 23 13 24 10 22 C8 20 8 16 10 13 C12 9 14 6 16 6Z" fill="#7cffd4" opacity="0.85"/>
+  <path
+     d="m 16.199589,0.07805696 c 14.097954,0 17.622441,13.90688204 7.048976,24.33704404 -5.286732,5.21508 -12.335709,6.95344 -17.6224407,3.47672 -3.5244878,-3.47672 -3.5244878,-10.430161 0,-15.645242 C 9.1506136,5.2931376 12.675101,0.07805696 16.199589,0.07805696 Z"
+     fill="#7cffd4"
+     opacity="0.85"
+     id="path1"
+     style="stroke-width:1.75026" />
   <!-- leaf vein -->
-  <path d="M16 6 C14 12 12 17 10 22" stroke="#08090d" stroke-width="1" fill="none" opacity="0.4"/>
+  <path
+     d="M 16.199589,0.07805696 C 12.675101,10.508218 9.1506136,19.200019 5.6261243,27.891821"
+     stroke="#08090d"
+     stroke-width="1.75026"
+     fill="none"
+     opacity="0.4"
+     id="path2" />
   <!-- B letter -->
-  <text x="9" y="21" font-family="Georgia, serif" font-size="13" font-weight="bold" font-style="italic" fill="#08090d" opacity="0.85">B</text>
+  <text
+     x="3.8376081"
+     y="26.332514"
+     font-family="Georgia, serif"
+     font-size="22.7533px"
+     font-weight="bold"
+     font-style="italic"
+     fill="#08090d"
+     opacity="0.85"
+     id="text2"
+     style="stroke-width:1.75026;opacity:0.99999999"
+     transform="scale(1.0068462,0.99320035)">B</text>
 </svg>
