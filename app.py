@@ -78,10 +78,37 @@ def jsonbin_read():
             headers=JSONBIN_HEADERS(), timeout=5
         )
         if r.status_code == 200:
-            return r.json().get("record", {}).get("runs")
+            record = r.json().get("record", {})
+            # handle both {"runs": [...]} and direct list
+            if isinstance(record, list):
+                return record
+            return record.get("runs")
+        return None
     except Exception:
-        pass
-    return None
+        return None
+
+_jsonbin_last_error = ""
+
+def jsonbin_read_debug():
+    """Like jsonbin_read but returns full debug info."""
+    global _jsonbin_last_error
+    if not JSONBIN_BIN_ID or not JSONBIN_API_KEY or not _requests:
+        _jsonbin_last_error = "missing config"
+        return None, {"error": "missing config", "bin": bool(JSONBIN_BIN_ID), "key": bool(JSONBIN_API_KEY)}
+    try:
+        r = _requests.get(
+            f"https://api.jsonbin.io/v3/b/{JSONBIN_BIN_ID}/latest",
+            headers=JSONBIN_HEADERS(), timeout=5
+        )
+        raw = r.json()
+        record = raw.get("record", {})
+        if isinstance(record, list):
+            runs = record
+        else:
+            runs = record.get("runs")
+        return runs, {"status": r.status_code, "record_keys": list(record.keys()) if isinstance(record, dict) else "list", "runs_count": len(runs) if runs else 0, "raw_keys": list(raw.keys())}
+    except Exception as e:
+        return None, {"error": str(e)}
 
 def jsonbin_write(runs):
     """Write runs to JSONBin. Returns True on success."""
@@ -198,14 +225,13 @@ def push_graph():
 @app.route("/api/debug")
 def api_debug():
     """Check JSONBin config and connectivity."""
-    has_bin = bool(JSONBIN_BIN_ID)
-    has_key = bool(JSONBIN_API_KEY)
-    runs = jsonbin_read()
+    runs, info = jsonbin_read_debug()
     return jsonify({
-        "jsonbin_bin_id_set": has_bin,
-        "jsonbin_api_key_set": has_key,
+        "jsonbin_bin_id_set": bool(JSONBIN_BIN_ID),
+        "jsonbin_api_key_set": bool(JSONBIN_API_KEY),
         "runs_loaded": runs is not None,
         "run_count": len(runs) if runs else 0,
+        "detail": info,
     })
 
 
