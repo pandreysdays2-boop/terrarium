@@ -21,8 +21,8 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="17.942835"
-     inkscape:cx="18.475342"
-     inkscape:cy="13.041418"
+     inkscape:cx="14.574063"
+     inkscape:cy="21.902893"
      inkscape:window-width="1920"
      inkscape:window-height="1015"
      inkscape:window-x="0"
@@ -30,38 +30,58 @@
      inkscape:window-maximized="1"
      inkscape:current-layer="svg2" />
   <!-- dark background circle -->
-  <circle
-     cx="16"
-     cy="16"
-     r="16"
+  <ellipse
+     cx="16.132914"
+     cy="15.609875"
      fill="#08090d"
-     id="circle1" />
+     id="circle1"
+     rx="15.575585"
+     ry="15.609873"
+     style="stroke-width:0.974544" />
   <!-- leaf shape -->
   <path
-     d="m 16.199589,0.07805696 c 14.097954,0 17.622441,13.90688204 7.048976,24.33704404 -5.286732,5.21508 -12.335709,6.95344 -17.6224407,3.47672 -3.5244878,-3.47672 -3.5244878,-10.430161 0,-15.645242 C 9.1506136,5.2931376 12.675101,0.07805696 16.199589,0.07805696 Z"
+     d="M 18.929176,1.0478804 C 31.979448,3.1388442 33.161315,16.647798 21.813085,24.819235 16.138971,28.904953 9.3537468,29.482747 4.9800706,25.452084 2.2376781,21.68279 3.2780281,15.189683 7.3208582,10.842594 11.623777,4.8722283 15.666606,0.52513924 18.929176,1.0478804 Z"
      fill="#7cffd4"
      opacity="0.85"
      id="path1"
-     style="stroke-width:1.75026" />
+     style="stroke-width:1.64803" />
   <!-- leaf vein -->
-  <path
-     d="M 16.199589,0.07805696 C 12.675101,10.508218 9.1506136,19.200019 5.6261243,27.891821"
-     stroke="#08090d"
-     stroke-width="1.75026"
-     fill="none"
-     opacity="0.4"
-     id="path2" />
   <!-- B letter -->
+  <path
+     style="opacity:1;fill:#46ffb6;stroke-width:1.648;stroke-dasharray:none;paint-order:stroke fill markers;fill-opacity:1"
+     d="M 14.769127,16.050975 20.286648,8.5828124 24.02073,2.7308951 23.630602,9.6417311 17.945882,17.444288 7.2452314,27.086021 4.4028717,25.302579 Z"
+     id="path3"
+     sodipodi:nodetypes="cccccccc" />
+  <path
+     style="fill:#46ffb6;fill-opacity:1;stroke-width:0.566464;stroke-dasharray:none;paint-order:stroke fill markers"
+     d="m 7.2524851,21.124329 -0.8736076,-2.79217 -0.482278,-2.136677 -0.8099993,2.174002 0.88532,2.91025 2.3555938,3.915688 1.2190861,-0.30528 z"
+     id="path3-6"
+     sodipodi:nodetypes="cccccccc" />
+  <path
+     style="fill:#46ffb6;fill-opacity:1;stroke-width:0.566464;stroke-dasharray:none;paint-order:stroke fill markers"
+     d="M 9.5514213,17.55149 9.2155882,14.626482 9.1393512,12.414045 7.954524,14.484277 8.28007,17.529476 9.8482061,21.788637 11.087373,21.651619 Z"
+     id="path3-6-5"
+     sodipodi:nodetypes="cccccccc" />
+  <path
+     style="fill:#46ffb6;fill-opacity:1;stroke-width:0.566464;stroke-dasharray:none;paint-order:stroke fill markers"
+     d="m 12.135436,13.535807 0.0087,-2.970765 0.181608,-2.2314082 -1.406426,1.9775002 -0.03281,3.090717 1.049498,4.4207 1.235655,-0.02879 z"
+     id="path3-6-56"
+     sodipodi:nodetypes="cccccccc" />
+  <path
+     style="fill:#46ffb6;fill-opacity:1;stroke-width:0.566464;stroke-dasharray:none;paint-order:stroke fill markers"
+     d="m 16.659432,10.025911 0.565008,-2.9810428 0.594118,-2.2142646 -1.734175,1.7854018 -0.610815,3.0980404 0.189466,4.5869082 1.203522,0.14661 z"
+     id="path3-6-9"
+     sodipodi:nodetypes="cccccccc" />
   <text
-     x="3.8376081"
-     y="26.332514"
+     x="10.272911"
+     y="24.15345"
      font-family="Georgia, serif"
-     font-size="22.7533px"
+     font-size="21.3182px"
      font-weight="bold"
      font-style="italic"
      fill="#08090d"
      opacity="0.85"
      id="text2"
-     style="stroke-width:1.75026;opacity:0.99999999"
-     transform="scale(1.0068462,0.99320035)">B</text>
+     style="opacity:1;stroke-width:1.63983;stroke-dasharray:none;paint-order:stroke fill markers"
+     transform="matrix(0.99076345,-0.00960242,0.00933437,1.0092322,0,0)">B</text>
 </svg>
