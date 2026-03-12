@@ -171,16 +171,17 @@
     .fern {
       position: fixed;
       bottom: 0;
-      width: 160px;
-      height: 580px;
+      width: 280px;
+      height: 100vh;
       pointer-events: none;
       z-index: 1;
-      opacity: 0.7;
+      opacity: 0.85;
     }
-    .fern-left  { left: 0; transform: translateX(-30px); }
-    .fern-right { right: 0; transform: translateX(30px) scaleX(-1); }
-    @media (max-width: 1300px) { .fern { opacity: 0.4; } }
-    @media (max-width: 1000px) { .fern { display: none; } }
+    .fern-left  { left: 0; }
+    .fern-right { right: 0; transform: scaleX(-1); }
+    @media (max-width: 1400px) { .fern { opacity: 0.6; width: 220px; } }
+    @media (max-width: 1100px) { .fern { opacity: 0.35; width: 160px; } }
+    @media (max-width: 800px)  { .fern { display: none; } }
 
     /* ── Scrollbar ── */
     ::-webkit-scrollbar { width: 4px; height: 4px; }
@@ -192,45 +193,72 @@
 </head>
 <body>
 
-<!-- Botanical ferns -->
-<svg class="fern fern-left" viewBox="0 0 180 600" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <path d="M90 580 C88 520 82 460 78 390 C74 320 72 260 76 190 C78 150 82 110 88 70" stroke="#1a3d2e" stroke-width="1.5" fill="none"/>
-  <path d="M84 520 C60 510 30 500 10 485 C30 488 58 495 80 505" stroke="#1e4534" stroke-width="1" fill="none" opacity="0.7"/>
-  <path d="M82 480 C55 465 25 450 4 432 C28 440 55 452 78 465" stroke="#1e4534" stroke-width="1" fill="none" opacity="0.8"/>
-  <path d="M80 440 C58 422 38 408 18 392 C40 402 62 416 78 430" stroke="#1e4534" stroke-width="1" fill="none" opacity="0.75"/>
-  <path d="M79 400 C62 382 46 365 30 346 C50 360 66 376 77 394" stroke="#1a3d2e" stroke-width="0.9" fill="none" opacity="0.7"/>
-  <path d="M86 500 C108 490 135 482 155 470 C132 476 106 484 84 496" stroke="#1e4534" stroke-width="1" fill="none" opacity="0.65"/>
-  <path d="M85 460 C110 445 138 432 158 418 C134 428 108 440 83 455" stroke="#1e4534" stroke-width="1" fill="none" opacity="0.7"/>
-  <path d="M83 418 C106 400 130 385 148 368 C126 380 102 395 81 412" stroke="#1a3d2e" stroke-width="0.9" fill="none" opacity="0.65"/>
-  <path d="M81 375 C100 356 120 340 136 322 C116 336 96 352 79 370" stroke="#1a3d2e" stroke-width="0.8" fill="none" opacity="0.6"/>
-  <path d="M79 330 C60 314 44 298 32 278 C48 292 64 308 77 325" stroke="#163326" stroke-width="0.8" fill="none" opacity="0.55"/>
-  <path d="M80 330 C98 312 114 295 126 276 C110 290 94 308 78 326" stroke="#163326" stroke-width="0.8" fill="none" opacity="0.55"/>
-  <path d="M78 285 C63 268 50 250 40 230 C54 246 67 264 76 282" stroke="#163326" stroke-width="0.7" fill="none" opacity="0.5"/>
-  <path d="M79 285 C93 267 105 248 114 228 C101 246 89 265 77 283" stroke="#163326" stroke-width="0.7" fill="none" opacity="0.5"/>
-  <path d="M78 240 C66 224 56 207 50 188 C60 204 70 222 76 238" stroke="#122a20" stroke-width="0.6" fill="none" opacity="0.45"/>
-  <path d="M79 240 C90 222 98 204 103 185 C93 202 83 220 77 237" stroke="#122a20" stroke-width="0.6" fill="none" opacity="0.45"/>
-  <path d="M78 195 C70 178 64 160 62 140 C68 158 74 176 77 193" stroke="#122a20" stroke-width="0.6" fill="none" opacity="0.4"/>
-  <path d="M79 195 C87 177 92 159 93 139 C87 157 82 176 77 193" stroke="#122a20" stroke-width="0.6" fill="none" opacity="0.4"/>
+<!-- Botanical ferns - jungle style, pointing inward -->
+<svg class="fern fern-left" viewBox="0 0 280 900" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <!-- stem 1 - main, curves right toward center -->
+  <path d="M20 900 C25 820 35 740 50 660 C65 580 80 500 100 420 C115 355 130 290 145 220 C155 170 162 120 165 70" stroke="#1a3d2e" stroke-width="2" fill="none"/>
+  <!-- big fronds pointing right (inward) from stem 1 -->
+  <path d="M45 780 C80 760 130 745 180 740 C220 736 255 738 275 742" stroke="#1e4534" stroke-width="1.5" fill="none" opacity="0.9"/>
+  <path d="M45 780 C75 768 110 758 145 752" stroke="#163326" stroke-width="0.8" fill="none" opacity="0.5"/>
+  <path d="M55 720 C95 698 148 682 200 674 C235 668 262 670 278 673" stroke="#1e4534" stroke-width="1.5" fill="none" opacity="0.85"/>
+  <path d="M65 660 C108 635 164 618 218 610 C248 605 268 607 278 610" stroke="#1e4534" stroke-width="1.4" fill="none" opacity="0.8"/>
+  <path d="M78 600 C118 572 172 554 226 546 C256 541 272 543 278 547" stroke="#1a3d2e" stroke-width="1.3" fill="none" opacity="0.75"/>
+  <path d="M90 540 C128 512 178 494 228 488 C256 483 272 485 278 489" stroke="#1a3d2e" stroke-width="1.2" fill="none" opacity="0.7"/>
+  <path d="M102 480 C136 454 182 438 228 433 C255 428 270 430 277 434" stroke="#163326" stroke-width="1.1" fill="none" opacity="0.65"/>
+  <path d="M114 420 C144 396 186 381 226 377 C252 373 267 375 275 379" stroke="#163326" stroke-width="1" fill="none" opacity="0.6"/>
+  <path d="M125 360 C152 338 190 324 226 320 C250 317 264 319 272 323" stroke="#122a20" stroke-width="0.9" fill="none" opacity="0.55"/>
+  <path d="M136 300 C160 280 194 268 226 265 C248 262 261 264 269 268" stroke="#122a20" stroke-width="0.9" fill="none" opacity="0.5"/>
+  <path d="M146 240 C167 222 197 212 226 210 C246 208 258 210 265 214" stroke="#0f2318" stroke-width="0.8" fill="none" opacity="0.45"/>
+  <path d="M154 185 C173 169 200 160 226 158 C244 157 255 159 261 163" stroke="#0f2318" stroke-width="0.7" fill="none" opacity="0.4"/>
+  <!-- leaflets on fronds -->
+  <path d="M120 743 C118 730 118 717 122 705" stroke="#1e4534" stroke-width="0.6" fill="none" opacity="0.4"/>
+  <path d="M160 738 C160 724 162 711 166 699" stroke="#1e4534" stroke-width="0.6" fill="none" opacity="0.4"/>
+  <path d="M200 735 C202 721 205 708 210 696" stroke="#1e4534" stroke-width="0.5" fill="none" opacity="0.35"/>
+  <path d="M130 675 C130 661 132 648 136 636" stroke="#1e4534" stroke-width="0.6" fill="none" opacity="0.4"/>
+  <path d="M170 669 C172 655 175 642 180 630" stroke="#1e4534" stroke-width="0.5" fill="none" opacity="0.35"/>
+  <path d="M215 663 C218 649 222 636 228 624" stroke="#1e4534" stroke-width="0.5" fill="none" opacity="0.3"/>
+  <!-- stem 2 - shorter, lower, different angle -->
+  <path d="M0 900 C8 840 18 775 32 710 C46 645 62 585 80 525" stroke="#163326" stroke-width="1.5" fill="none" opacity="0.7"/>
+  <path d="M28 780 C65 762 112 750 158 746 C195 743 222 745 240 749" stroke="#163326" stroke-width="1.2" fill="none" opacity="0.7"/>
+  <path d="M40 720 C78 700 126 686 170 682 C204 679 228 681 244 685" stroke="#163326" stroke-width="1.1" fill="none" opacity="0.65"/>
+  <path d="M52 660 C88 638 134 624 175 620 C207 617 230 619 244 623" stroke="#122a20" stroke-width="1" fill="none" opacity="0.6"/>
+  <path d="M62 600 C96 578 138 565 177 561 C208 558 229 560 242 564" stroke="#122a20" stroke-width="0.9" fill="none" opacity="0.55"/>
+  <!-- stem 3 - far left edge, very tall -->
+  <path d="M-10 900 C-5 800 5 700 20 600 C35 500 52 400 70 300 C82 230 90 160 94 90" stroke="#122a20" stroke-width="1.2" fill="none" opacity="0.5"/>
+  <path d="M16 680 C52 662 96 650 138 646" stroke="#122a20" stroke-width="1" fill="none" opacity="0.5"/>
+  <path d="M30 600 C64 582 106 570 146 566" stroke="#0f2318" stroke-width="0.9" fill="none" opacity="0.45"/>
+  <path d="M44 520 C76 504 114 493 152 490" stroke="#0f2318" stroke-width="0.8" fill="none" opacity="0.4"/>
+  <path d="M56 440 C86 426 120 416 156 413" stroke="#0f2318" stroke-width="0.7" fill="none" opacity="0.35"/>
 </svg>
 
-<svg class="fern fern-right" viewBox="0 0 180 600" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <path d="M90 580 C92 520 98 460 102 390 C106 320 108 260 104 190 C102 150 98 110 92 70" stroke="#1a3d2e" stroke-width="1.5" fill="none"/>
-  <path d="M96 520 C120 510 150 500 170 485 C150 488 122 495 100 505" stroke="#1e4534" stroke-width="1" fill="none" opacity="0.7"/>
-  <path d="M98 480 C125 465 155 450 176 432 C152 440 125 452 102 465" stroke="#1e4534" stroke-width="1" fill="none" opacity="0.8"/>
-  <path d="M100 440 C122 422 142 408 162 392 C140 402 118 416 102 430" stroke="#1e4534" stroke-width="1" fill="none" opacity="0.75"/>
-  <path d="M101 400 C118 382 134 365 150 346 C130 360 114 376 103 394" stroke="#1a3d2e" stroke-width="0.9" fill="none" opacity="0.7"/>
-  <path d="M94 500 C72 490 45 482 25 470 C48 476 74 484 96 496" stroke="#1e4534" stroke-width="1" fill="none" opacity="0.65"/>
-  <path d="M95 460 C70 445 42 432 22 418 C46 428 72 440 97 455" stroke="#1e4534" stroke-width="1" fill="none" opacity="0.7"/>
-  <path d="M97 418 C74 400 50 385 32 368 C54 380 78 395 99 412" stroke="#1a3d2e" stroke-width="0.9" fill="none" opacity="0.65"/>
-  <path d="M99 375 C80 356 60 340 44 322 C64 336 84 352 101 370" stroke="#1a3d2e" stroke-width="0.8" fill="none" opacity="0.6"/>
-  <path d="M101 330 C120 314 136 298 148 278 C132 292 116 308 103 325" stroke="#163326" stroke-width="0.8" fill="none" opacity="0.55"/>
-  <path d="M100 330 C82 312 66 295 54 276 C70 290 86 308 102 326" stroke="#163326" stroke-width="0.8" fill="none" opacity="0.55"/>
-  <path d="M102 285 C117 268 130 250 140 230 C126 246 113 264 104 282" stroke="#163326" stroke-width="0.7" fill="none" opacity="0.5"/>
-  <path d="M101 285 C87 267 75 248 66 228 C79 246 91 265 103 283" stroke="#163326" stroke-width="0.7" fill="none" opacity="0.5"/>
-  <path d="M102 240 C114 224 124 207 130 188 C120 204 110 222 104 238" stroke="#122a20" stroke-width="0.6" fill="none" opacity="0.45"/>
-  <path d="M101 240 C90 222 82 204 77 185 C87 202 97 220 103 237" stroke="#122a20" stroke-width="0.6" fill="none" opacity="0.45"/>
-  <path d="M102 195 C110 178 116 160 118 140 C112 158 106 176 103 193" stroke="#122a20" stroke-width="0.6" fill="none" opacity="0.4"/>
-  <path d="M101 195 C93 177 88 159 87 139 C93 157 98 176 103 193" stroke="#122a20" stroke-width="0.6" fill="none" opacity="0.4"/>
+<svg class="fern fern-right" viewBox="0 0 280 900" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <!-- mirror of left - stem pointing left toward center -->
+  <path d="M260 900 C255 820 245 740 230 660 C215 580 200 500 180 420 C165 355 150 290 135 220 C125 170 118 120 115 70" stroke="#1a3d2e" stroke-width="2" fill="none"/>
+  <path d="M235 780 C200 760 150 745 100 740 C60 736 25 738 5 742" stroke="#1e4534" stroke-width="1.5" fill="none" opacity="0.9"/>
+  <path d="M225 720 C185 698 132 682 80 674 C45 668 18 670 2 673" stroke="#1e4534" stroke-width="1.5" fill="none" opacity="0.85"/>
+  <path d="M215 660 C172 635 116 618 62 610 C32 605 12 607 2 610" stroke="#1e4534" stroke-width="1.4" fill="none" opacity="0.8"/>
+  <path d="M202 600 C162 572 108 554 54 546 C24 541 8 543 2 547" stroke="#1a3d2e" stroke-width="1.3" fill="none" opacity="0.75"/>
+  <path d="M190 540 C152 512 102 494 52 488 C24 483 8 485 2 489" stroke="#1a3d2e" stroke-width="1.2" fill="none" opacity="0.7"/>
+  <path d="M178 480 C144 454 98 438 52 433 C25 428 10 430 3 434" stroke="#163326" stroke-width="1.1" fill="none" opacity="0.65"/>
+  <path d="M166 420 C136 396 94 381 54 377 C28 373 13 375 5 379" stroke="#163326" stroke-width="1" fill="none" opacity="0.6"/>
+  <path d="M155 360 C128 338 90 324 54 320 C30 317 16 319 8 323" stroke="#122a20" stroke-width="0.9" fill="none" opacity="0.55"/>
+  <path d="M144 300 C120 280 86 268 54 265 C32 262 19 264 11 268" stroke="#122a20" stroke-width="0.9" fill="none" opacity="0.5"/>
+  <path d="M134 240 C113 222 83 212 54 210 C34 208 22 210 15 214" stroke="#0f2318" stroke-width="0.8" fill="none" opacity="0.45"/>
+  <path d="M126 185 C107 169 80 160 54 158 C36 157 25 159 19 163" stroke="#0f2318" stroke-width="0.7" fill="none" opacity="0.4"/>
+  <!-- leaflets -->
+  <path d="M160 743 C162 730 162 717 158 705" stroke="#1e4534" stroke-width="0.6" fill="none" opacity="0.4"/>
+  <path d="M120 738 C120 724 118 711 114 699" stroke="#1e4534" stroke-width="0.6" fill="none" opacity="0.4"/>
+  <path d="M80 735 C78 721 75 708 70 696" stroke="#1e4534" stroke-width="0.5" fill="none" opacity="0.35"/>
+  <!-- stem 2 -->
+  <path d="M280 900 C272 840 262 775 248 710 C234 645 218 585 200 525" stroke="#163326" stroke-width="1.5" fill="none" opacity="0.7"/>
+  <path d="M252 780 C215 762 168 750 122 746 C85 743 58 745 40 749" stroke="#163326" stroke-width="1.2" fill="none" opacity="0.7"/>
+  <path d="M240 720 C202 700 154 686 110 682 C76 679 52 681 36 685" stroke="#163326" stroke-width="1.1" fill="none" opacity="0.65"/>
+  <path d="M228 660 C192 638 146 624 105 620 C73 617 50 619 36 623" stroke="#122a20" stroke-width="1" fill="none" opacity="0.6"/>
+  <!-- stem 3 -->
+  <path d="M290 900 C285 800 275 700 260 600 C245 500 228 400 210 300 C198 230 190 160 186 90" stroke="#122a20" stroke-width="1.2" fill="none" opacity="0.5"/>
+  <path d="M264 680 C228 662 184 650 142 646" stroke="#122a20" stroke-width="1" fill="none" opacity="0.5"/>
+  <path d="M250 600 C216 582 174 570 134 566" stroke="#0f2318" stroke-width="0.9" fill="none" opacity="0.45"/>
+  <path d="M236 520 C204 504 166 493 128 490" stroke="#0f2318" stroke-width="0.8" fill="none" opacity="0.4"/>
 </svg>
 
 <nav>
