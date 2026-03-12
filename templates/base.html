@@ -171,7 +171,7 @@
     .fern-col {
       position: fixed;
       top: 0; bottom: 0;
-      width: 200px;
+      width: 240px;
       pointer-events: none;
       z-index: 1;
       display: flex;
@@ -179,26 +179,29 @@
       align-items: flex-start;
       overflow: hidden;
     }
-    .fern-col.left  { left: -55px; }
-    .fern-col.right { right: -55px; }
-    .fern-col img {
-      flex-shrink: 0;
-      margin-top: -55px;
-    }
-    /* left side - each fern slightly different */
-    .fern-col.left img:nth-child(1) { width: 180px; opacity: 0.45; filter: saturate(0.3) brightness(0.6); }
-    .fern-col.left img:nth-child(2) { width: 160px; opacity: 0.35; filter: saturate(0.2) brightness(0.5); margin-top: -70px; }
-    .fern-col.left img:nth-child(3) { width: 200px; opacity: 0.5;  filter: saturate(0.4) brightness(0.65); margin-top: -50px; }
-    .fern-col.left img:nth-child(4) { width: 150px; opacity: 0.3;  filter: saturate(0.15) brightness(0.45); margin-top: -65px; }
-    .fern-col.left img:nth-child(5) { width: 170px; opacity: 0.4;  filter: saturate(0.25) brightness(0.55); margin-top: -60px; }
-    /* right side - independent variation */
-    .fern-col.right img:nth-child(1) { width: 170px; opacity: 0.4;  filter: saturate(0.25) brightness(0.55); }
-    .fern-col.right img:nth-child(2) { width: 195px; opacity: 0.5;  filter: saturate(0.4) brightness(0.65); margin-top: -60px; }
-    .fern-col.right img:nth-child(3) { width: 155px; opacity: 0.32; filter: saturate(0.18) brightness(0.48); margin-top: -70px; }
-    .fern-col.right img:nth-child(4) { width: 185px; opacity: 0.45; filter: saturate(0.3) brightness(0.6);  margin-top: -55px; }
-    .fern-col.right img:nth-child(5) { width: 165px; opacity: 0.38; filter: saturate(0.22) brightness(0.52); margin-top: -65px; }
-    @media (max-width: 1400px) { .fern-col img { transform: scale(0.85); } }
-    @media (max-width: 1100px) { .fern-col { opacity: 0.6; } }
+    .fern-col.left  { left: -50px; }
+    .fern-col.right { right: -50px; transform: scaleX(-1); }
+    .fern-col img { flex-shrink: 0; }
+    /* left - 8 ferns, bigger, more saturated */
+    .fern-col.left img:nth-child(1) { width: 260px; opacity: 0.75; filter: saturate(0.7) brightness(0.75); margin-top: -10px; }
+    .fern-col.left img:nth-child(2) { width: 230px; opacity: 0.65; filter: saturate(0.6) brightness(0.7);  margin-top: -80px; }
+    .fern-col.left img:nth-child(3) { width: 275px; opacity: 0.8;  filter: saturate(0.8) brightness(0.8);  margin-top: -70px; }
+    .fern-col.left img:nth-child(4) { width: 245px; opacity: 0.6;  filter: saturate(0.55) brightness(0.68); margin-top: -85px; }
+    .fern-col.left img:nth-child(5) { width: 265px; opacity: 0.72; filter: saturate(0.7) brightness(0.76); margin-top: -75px; }
+    .fern-col.left img:nth-child(6) { width: 235px; opacity: 0.62; filter: saturate(0.6) brightness(0.7);  margin-top: -80px; }
+    .fern-col.left img:nth-child(7) { width: 270px; opacity: 0.78; filter: saturate(0.75) brightness(0.78); margin-top: -70px; }
+    .fern-col.left img:nth-child(8) { width: 250px; opacity: 0.68; filter: saturate(0.65) brightness(0.72); margin-top: -80px; }
+    /* right - 8 ferns, slightly different sizes */
+    .fern-col.right img:nth-child(1) { width: 255px; opacity: 0.7;  filter: saturate(0.68) brightness(0.74); margin-top: -10px; }
+    .fern-col.right img:nth-child(2) { width: 275px; opacity: 0.8;  filter: saturate(0.78) brightness(0.8);  margin-top: -75px; }
+    .fern-col.right img:nth-child(3) { width: 240px; opacity: 0.63; filter: saturate(0.58) brightness(0.69); margin-top: -82px; }
+    .fern-col.right img:nth-child(4) { width: 265px; opacity: 0.74; filter: saturate(0.72) brightness(0.77); margin-top: -72px; }
+    .fern-col.right img:nth-child(5) { width: 250px; opacity: 0.66; filter: saturate(0.62) brightness(0.71); margin-top: -78px; }
+    .fern-col.right img:nth-child(6) { width: 270px; opacity: 0.76; filter: saturate(0.74) brightness(0.78); margin-top: -70px; }
+    .fern-col.right img:nth-child(7) { width: 245px; opacity: 0.64; filter: saturate(0.6) brightness(0.7);  margin-top: -80px; }
+    .fern-col.right img:nth-child(8) { width: 260px; opacity: 0.72; filter: saturate(0.7) brightness(0.75); margin-top: -75px; }
+    @media (max-width: 1400px) { .fern-col { width: 190px; } }
+    @media (max-width: 1100px) { .fern-col { opacity: 0.6; width: 150px; } }
     @media (max-width: 800px)  { .fern-col { display: none; } }
 
     /* ── Scrollbar ── */
@@ -211,8 +214,11 @@
 </head>
 <body>
 
-<!-- Botanical ferns - hand drawn, stacked -->
+<!-- Botanical ferns - 8 per side, right mirrored -->
 <div class="fern-col left">
+  <img src="/static/fern.svg" alt="">
+  <img src="/static/fern.svg" alt="">
+  <img src="/static/fern.svg" alt="">
   <img src="/static/fern.svg" alt="">
   <img src="/static/fern.svg" alt="">
   <img src="/static/fern.svg" alt="">
@@ -220,6 +226,9 @@
   <img src="/static/fern.svg" alt="">
 </div>
 <div class="fern-col right">
+  <img src="/static/fern.svg" alt="">
+  <img src="/static/fern.svg" alt="">
+  <img src="/static/fern.svg" alt="">
   <img src="/static/fern.svg" alt="">
   <img src="/static/fern.svg" alt="">
   <img src="/static/fern.svg" alt="">
