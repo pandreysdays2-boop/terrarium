@@ -1,20 +1,22 @@
 import os, json, time
 from flask import Flask, render_template, jsonify, request
+try:
+    import requests as _requests
+except ImportError:
+    _requests = None
 
 app = Flask(__name__)
 
 # ════════════════════════════════════════════════════════
-#  CONFIG
-#  On Railway: set these in the Variables tab
-#  Locally:    they fall back to the defaults below
+#  CONFIG — set these in Render's Environment tab
 # ════════════════════════════════════════════════════════
 
-UPLOAD_SECRET = os.environ.get("UPLOAD_SECRET", "change-this-before-deploying")
+UPLOAD_SECRET   = os.environ.get("UPLOAD_SECRET", "change-this-before-deploying")
+JSONBIN_BIN_ID  = os.environ.get("JSONBIN_BIN_ID", "")   # your bin ID from jsonbin.io
+JSONBIN_API_KEY = os.environ.get("JSONBIN_API_KEY", "")  # your API key from jsonbin.io
 
-# Files stored next to app.py on the Railway server
 BASE        = os.path.dirname(os.path.abspath(__file__))
 LOCAL_GRAPH = os.path.join(BASE, "graph_log.json")
-LOCAL_RUNS  = os.path.join(BASE, "runs_data.json")
 
 
 # ════════════════════════════════════════════════════════
@@ -42,12 +44,59 @@ SAMPLE_GRAPH = {
 
 DEFAULT_RUNS = [
     {
+        "id": 18, "name": "Run 18", "stage": "2-Stage Pipeline",
+        "best_val": 3.3355, "start": "2026-03-12", "status": "complete",
+        "notes": "New best. 2-stage pipeline. Best val at step 58600.",
+        "sample_text": "The story of the day before yesterday's party of consternation is not a dream, said the citizen, though in his lower mind he spoke as an inquest of events. — It's no matter, sir. — I fear it's not the best in the world, Martin Cunningham said."
+    },
+    {
         "id": 17, "name": "Run 17", "stage": "2-Stage Pipeline",
         "best_val": 3.4735, "start": "2026-03-10", "status": "complete",
-        "notes": "All-time best. 2-stage pipeline confirmed working.",
+        "notes": "Previous best. 2-stage pipeline confirmed working.",
         "sample_text": ""
     },
 ]
+
+
+# ════════════════════════════════════════════════════════
+#  JSONBIN — permanent run storage
+# ════════════════════════════════════════════════════════
+
+JSONBIN_HEADERS = lambda: {
+    "Content-Type": "application/json",
+    "X-Master-Key": JSONBIN_API_KEY,
+    "X-Bin-Versioning": "false",
+}
+
+def jsonbin_read():
+    """Read runs from JSONBin. Returns list or None on failure."""
+    if not JSONBIN_BIN_ID or not JSONBIN_API_KEY or not _requests:
+        return None
+    try:
+        r = _requests.get(
+            f"https://api.jsonbin.io/v3/b/{JSONBIN_BIN_ID}/latest",
+            headers=JSONBIN_HEADERS(), timeout=5
+        )
+        if r.status_code == 200:
+            return r.json().get("record", {}).get("runs")
+    except Exception:
+        pass
+    return None
+
+def jsonbin_write(runs):
+    """Write runs to JSONBin. Returns True on success."""
+    if not JSONBIN_BIN_ID or not JSONBIN_API_KEY or not _requests:
+        return False
+    try:
+        r = _requests.put(
+            f"https://api.jsonbin.io/v3/b/{JSONBIN_BIN_ID}",
+            headers=JSONBIN_HEADERS(),
+            json={"runs": runs},
+            timeout=5
+        )
+        return r.status_code == 200
+    except Exception:
+        return False
 
 
 # ════════════════════════════════════════════════════════
@@ -72,6 +121,11 @@ def write_json_atomic(path, data):
 def auth_ok():
     return request.headers.get("X-Secret") == UPLOAD_SECRET
 
+def load_runs():
+    """Load runs from JSONBin, fall back to defaults."""
+    runs = jsonbin_read()
+    return runs if runs else DEFAULT_RUNS
+
 
 # ════════════════════════════════════════════════════════
 #  PAGES
@@ -83,8 +137,7 @@ def terrarium():
 
 @app.route("/runs")
 def runs():
-    run_list = read_json(LOCAL_RUNS) or DEFAULT_RUNS
-    return render_template("runs.html", runs=run_list)
+    return render_template("runs.html", runs=load_runs())
 
 @app.route("/info")
 def info():
@@ -118,8 +171,8 @@ def api_status():
         })
     return jsonify({
         "training": False, "stage": "Stage 2 · Mid",
-        "best_val": 3.4735, "step": 9000,
-        "val": 3.47, "train": 3.38,
+        "best_val": 3.3355, "step": 60000,
+        "val": 3.3355, "train": 2.86,
         "updated_ago": 999, "_is_sample": True,
     })
 
@@ -130,7 +183,6 @@ def api_status():
 
 @app.route("/api/push_graph", methods=["POST"])
 def push_graph():
-    """Receives graph_log.json from admin.py or push_graph.py."""
     if not auth_ok():
         return jsonify({"error": "Unauthorized"}), 401
     data = request.get_json(silent=True)
@@ -145,15 +197,20 @@ def push_graph():
 
 @app.route("/api/push_runs", methods=["POST"])
 def push_runs():
-    """Receives the published runs list from admin.py."""
+    """Receives runs from admin.py and saves to JSONBin permanently."""
     if not auth_ok():
         return jsonify({"error": "Unauthorized"}), 401
     body = request.get_json(silent=True)
     if not body or "runs" not in body:
         return jsonify({"error": "No runs list"}), 400
+    runs = body["runs"]
+    ok = jsonbin_write(runs)
+    if ok:
+        return jsonify({"ok": True, "runs": len(runs), "storage": "jsonbin"})
+    # JSONBin not configured — fall back to local file
     try:
-        write_json_atomic(LOCAL_RUNS, body["runs"])
-        return jsonify({"ok": True, "runs": len(body["runs"])})
+        write_json_atomic(os.path.join(BASE, "runs_data.json"), runs)
+        return jsonify({"ok": True, "runs": len(runs), "storage": "local"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
