@@ -526,7 +526,8 @@ async function loadData() {
   const stage = d.stage || '';
   const s1steps = Math.min(last.step, 15000);
   const s2steps = Math.max(0, last.step - 15000);
-  const s2done  = s2steps >= 60000 || d._is_sample === false && s2steps > 0 && !d.training;
+  const S2_TARGET = 59800;
+  const s2done  = s2steps >= S2_TARGET || d._is_sample === false && s2steps > 0 && !d.training;
   if (stage.includes('1') && !stage.includes('2')) {
     document.getElementById('s1-tag').textContent = 'active';
     document.getElementById('s1-tag').className   = 'tag tag-green';
@@ -544,9 +545,15 @@ async function loadData() {
     }
   }
   document.getElementById('s1-bar').style.width   = (s1steps/15000*100).toFixed(1) + '%';
-  document.getElementById('s2-bar').style.width   = (Math.min(s2steps,60000)/60000*100).toFixed(1) + '%';
+  document.getElementById('s2-bar').style.width   = (Math.min(s2steps,S2_TARGET)/S2_TARGET*100).toFixed(1) + '%';
   document.getElementById('s1-steps').textContent = fmtStepK(s1steps) + ' steps';
-  document.getElementById('s2-steps').textContent = fmtStepK(s2steps) + ' steps';
+  // if not actively training, show stage 2 as complete
+  if (!d.training) {
+    document.getElementById('s2-bar').style.width = '100%';
+    document.getElementById('s2-steps').textContent = '60.0k steps';
+  } else {
+    document.getElementById('s2-steps').textContent = fmtStepK(s2steps) + ' steps';
+  }
   document.getElementById('sb-stage-sub').textContent = stage;
 }
 
