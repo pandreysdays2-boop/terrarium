@@ -204,6 +204,17 @@
     @media (max-width: 1100px) { .fern-col { opacity: 0.6; width: 150px; } }
     @media (max-width: 800px)  { .fern-col { display: none; } }
 
+    /* ── Ground ── */
+    .ground {
+      display: block;
+      width: 100%;
+      height: 80px;
+      pointer-events: none;
+      margin-top: 120px;
+      image-rendering: pixelated;
+      background: url('/static/ground.webp') repeat-x center / auto 80px;
+    }
+
     /* ── Scrollbar ── */
     ::-webkit-scrollbar { width: 4px; height: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -214,7 +225,7 @@
 </head>
 <body>
 
-<!-- Botanical ferns - 8 per side, right mirrored -->
+<!-- Botanical ferns - 8 per side, right mirrored + ground -->
 <div class="fern-col left">
   <img src="/static/fern.svg" alt="">
   <img src="/static/fern.svg" alt="">
@@ -248,6 +259,7 @@
 </nav>
 
 {% block content %}{% endblock %}
+<div class="ground"></div>
 
 <footer>
   <span>The Terrarium</span>

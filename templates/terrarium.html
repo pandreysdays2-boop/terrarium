@@ -524,7 +524,10 @@ async function loadData() {
 
   // Stage pills
   const stage = d.stage || '';
-  if (stage.includes('1')) {
+  const s1steps = Math.min(last.step, 15000);
+  const s2steps = Math.max(0, last.step - 15000);
+  const s2done  = s2steps >= 60000 || d._is_sample === false && s2steps > 0 && !d.training;
+  if (stage.includes('1') && !stage.includes('2')) {
     document.getElementById('s1-tag').textContent = 'active';
     document.getElementById('s1-tag').className   = 'tag tag-green';
     document.getElementById('s2-tag').textContent = 'waiting';
@@ -532,13 +535,14 @@ async function loadData() {
   } else if (stage.includes('2')) {
     document.getElementById('s1-tag').textContent = 'done';
     document.getElementById('s1-tag').className   = 'tag tag-dim';
-    document.getElementById('s2-tag').textContent = 'active';
-    document.getElementById('s2-tag').className   = 'tag tag-purple';
+    if (s2done || !d.training) {
+      document.getElementById('s2-tag').textContent = 'done';
+      document.getElementById('s2-tag').className   = 'tag tag-dim';
+    } else {
+      document.getElementById('s2-tag').textContent = 'active';
+      document.getElementById('s2-tag').className   = 'tag tag-purple';
+    }
   }
-
-  // Stage bars — estimate from step
-  const s1steps = Math.min(last.step, 15000);
-  const s2steps = Math.max(0, last.step - 15000);
   document.getElementById('s1-bar').style.width   = (s1steps/15000*100).toFixed(1) + '%';
   document.getElementById('s2-bar').style.width   = (Math.min(s2steps,60000)/60000*100).toFixed(1) + '%';
   document.getElementById('s1-steps').textContent = fmtStepK(s1steps) + ' steps';

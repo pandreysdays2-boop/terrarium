@@ -195,6 +195,20 @@ def push_graph():
         return jsonify({"error": str(e)}), 500
 
 
+@app.route("/api/debug")
+def api_debug():
+    """Check JSONBin config and connectivity."""
+    has_bin = bool(JSONBIN_BIN_ID)
+    has_key = bool(JSONBIN_API_KEY)
+    runs = jsonbin_read()
+    return jsonify({
+        "jsonbin_bin_id_set": has_bin,
+        "jsonbin_api_key_set": has_key,
+        "runs_loaded": runs is not None,
+        "run_count": len(runs) if runs else 0,
+    })
+
+
 @app.route("/api/push_runs", methods=["POST"])
 def push_runs():
     """Receives runs from admin.py and saves to JSONBin permanently."""
