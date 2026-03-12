@@ -188,19 +188,23 @@ def api_status():
         last = pts[-1] if pts else {}
         age  = time.time() - data.get("updated", 0)
         return jsonify({
-            "training":    age < 120,
-            "stage":       data.get("stage", ""),
-            "best_val":    data.get("best_val"),
-            "step":        last.get("step"),
-            "val":         last.get("val"),
-            "train":       last.get("train"),
-            "updated_ago": int(age),
+            "training":      age < 120,
+            "stage":         data.get("stage", ""),
+            "best_val":      data.get("best_val"),
+            "step":          last.get("step"),
+            "val":           last.get("val"),
+            "train":         last.get("train"),
+            "updated_ago":   int(age),
+            "stage1_target": data.get("stage1_target", 15000),
+            "stage2_target": data.get("stage2_target", 60000),
         })
     return jsonify({
         "training": False, "stage": "Stage 2 · Mid",
-        "best_val": 3.3355, "step": 60000,
+        "best_val": 3.3355, "step": 75800,
         "val": 3.3355, "train": 2.86,
         "updated_ago": 999, "_is_sample": True,
+        "stage1_target": 15000,
+        "stage2_target": 60000,
     })
 
 

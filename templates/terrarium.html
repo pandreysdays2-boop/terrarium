@@ -356,7 +356,7 @@
           </div>
           <div class="stage-steps">
             <span id="s1-steps">0 steps</span>
-            <span>15,000 target</span>
+            <span><span id='s1-target-label'>15,000</span> target</span>
           </div>
         </div>
         <div class="stage-card">
@@ -369,7 +369,7 @@
           </div>
           <div class="stage-steps">
             <span id="s2-steps">0 steps</span>
-            <span>60,000 target</span>
+            <span><span id='s2-target-label'>60,000</span> target</span>
           </div>
         </div>
       </div>
@@ -524,10 +524,11 @@ async function loadData() {
 
   // Stage pills
   const stage = d.stage || '';
-  const s1steps = Math.min(last.step, 15000);
-  const s2steps = Math.max(0, last.step - 15000);
-  const S2_TARGET = 59800;
-  const s2done  = s2steps >= S2_TARGET || d._is_sample === false && s2steps > 0 && !d.training;
+  const S1_TARGET = d.stage1_target || 15000;
+  const S2_TARGET = d.stage2_target || 60000;
+  const s1steps = Math.min(last.step, S1_TARGET);
+  const s2steps = Math.max(0, last.step - S1_TARGET);
+  const s2done  = s2steps >= S2_TARGET || (!d.training && s2steps > 0);
   if (stage.includes('1') && !stage.includes('2')) {
     document.getElementById('s1-tag').textContent = 'active';
     document.getElementById('s1-tag').className   = 'tag tag-green';
@@ -544,13 +545,15 @@ async function loadData() {
       document.getElementById('s2-tag').className   = 'tag tag-purple';
     }
   }
-  document.getElementById('s1-bar').style.width   = (s1steps/15000*100).toFixed(1) + '%';
+  document.getElementById('s1-bar').style.width   = (s1steps/S1_TARGET*100).toFixed(1) + '%';
   document.getElementById('s2-bar').style.width   = (Math.min(s2steps,S2_TARGET)/S2_TARGET*100).toFixed(1) + '%';
   document.getElementById('s1-steps').textContent = fmtStepK(s1steps) + ' steps';
+  document.getElementById('s1-target-label').textContent = fmtStepK(S1_TARGET);
+  document.getElementById('s2-target-label').textContent = fmtStepK(S2_TARGET);
   // if not actively training, show stage 2 as complete
   if (!d.training) {
     document.getElementById('s2-bar').style.width = '100%';
-    document.getElementById('s2-steps').textContent = '60.0k steps';
+    document.getElementById('s2-steps').textContent = fmtStepK(S2_TARGET) + ' steps';
   } else {
     document.getElementById('s2-steps').textContent = fmtStepK(s2steps) + ' steps';
   }
