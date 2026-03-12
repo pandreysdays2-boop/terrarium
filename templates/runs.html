@@ -150,21 +150,26 @@
     <p>Every run Bloom has ever trained — best checkpoints, notes, and generated text samples.</p>
   </div>
 
+  {% set best = runs | sort(attribute='best_val') | first %}
   <div class="overall-best">
     <div>
       <div class="label">All-time best val loss</div>
-      <div class="val">3.4735</div>
+      <div class="val">{{ '%.4f'|format(best.best_val) }}</div>
     </div>
     <div style="color:var(--dim);font-size:11px;">
-      Run 17 · Stage 2 · Mid<br>
-      <span style="color:var(--dim);opacity:0.6;">Target: 3.3 &nbsp;·&nbsp; △ 0.1735 to go</span>
+      {{ best.name }} · {{ best.stage }}<br>
+      {% if best.best_val > 3.3 %}
+        <span style="color:var(--dim);opacity:0.6;">Target: 3.3 &nbsp;·&nbsp; △ {{ '%.4f'|format(best.best_val - 3.3) }} to go</span>
+      {% else %}
+        <span style="color:var(--good);">★ Target reached</span>
+      {% endif %}
     </div>
-    <div class="arrow">Bloom's best → Run 17 ↓</div>
+    <div class="arrow">Bloom's best → {{ best.name }} ↓</div>
   </div>
 
   {% for run in runs %}
   <div class="run-card">
-    <div class="run-number {% if run.best_val == 3.4735 %}best{% endif %}">
+    <div class="run-number {% if run.best_val == best.best_val %}best{% endif %}">
       {{ run.id }}
     </div>
     <div class="run-body">
@@ -177,7 +182,7 @@
         {% else %}
           <span class="tag tag-yellow">{{ run.status }}</span>
         {% endif %}
-        {% if run.best_val == 3.4735 %}
+        {% if run.best_val == best.best_val %}
           <span class="tag tag-green">★ best ever</span>
         {% endif %}
       </div>
@@ -188,7 +193,7 @@
       {% endif %}
     </div>
     <div class="run-metric">
-      <div class="big {% if run.best_val == 3.4735 %}best-val{% endif %}">
+      <div class="big {% if run.best_val == best.best_val %}best-val{% endif %}">
         {{ '%.4f'|format(run.best_val) }}
       </div>
       <div class="meta">best val loss</div>
