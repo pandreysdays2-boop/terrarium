@@ -78,37 +78,10 @@ def jsonbin_read():
             headers=JSONBIN_HEADERS(), timeout=5
         )
         if r.status_code == 200:
-            record = r.json().get("record", {})
-            # handle both {"runs": [...]} and direct list
-            if isinstance(record, list):
-                return record
-            return record.get("runs")
-        return None
+            return r.json().get("record", {}).get("runs")
     except Exception:
-        return None
-
-_jsonbin_last_error = ""
-
-def jsonbin_read_debug():
-    """Like jsonbin_read but returns full debug info."""
-    global _jsonbin_last_error
-    if not JSONBIN_BIN_ID or not JSONBIN_API_KEY or not _requests:
-        _jsonbin_last_error = "missing config"
-        return None, {"error": "missing config", "bin": bool(JSONBIN_BIN_ID), "key": bool(JSONBIN_API_KEY)}
-    try:
-        r = _requests.get(
-            f"https://api.jsonbin.io/v3/b/{JSONBIN_BIN_ID}/latest",
-            headers=JSONBIN_HEADERS(), timeout=5
-        )
-        raw = r.json()
-        record = raw.get("record", {})
-        if isinstance(record, list):
-            runs = record
-        else:
-            runs = record.get("runs")
-        return runs, {"status": r.status_code, "record_keys": list(record.keys()) if isinstance(record, dict) else "list", "runs_count": len(runs) if runs else 0, "raw_keys": list(raw.keys())}
-    except Exception as e:
-        return None, {"error": str(e)}
+        pass
+    return None
 
 def jsonbin_write(runs):
     """Write runs to JSONBin. Returns True on success."""
@@ -175,9 +148,16 @@ def info():
 #  API — READ
 # ════════════════════════════════════════════════════════
 
+# All-time best val floor — update this after each run
+ALL_TIME_BEST = 3.3105  # Run 19, step 74800
+
 @app.route("/api/graph_log")
 def api_graph_log():
     data = read_json(LOCAL_GRAPH)
+    if data:
+        # Clamp best_val to all-time floor so it never shows worse than history
+        if data.get("best_val") is not None:
+            data["best_val"] = min(data["best_val"], ALL_TIME_BEST)
     return jsonify(data if data else SAMPLE_GRAPH)
 
 @app.route("/api/status")
@@ -187,24 +167,23 @@ def api_status():
         pts  = data.get("points", [])
         last = pts[-1] if pts else {}
         age  = time.time() - data.get("updated", 0)
+        best = data.get("best_val")
+        if best is not None:
+            best = min(best, ALL_TIME_BEST)
         return jsonify({
-            "training":      age < 120,
-            "stage":         data.get("stage", ""),
-            "best_val":      data.get("best_val"),
-            "step":          last.get("step"),
-            "val":           last.get("val"),
-            "train":         last.get("train"),
-            "updated_ago":   int(age),
-            "stage1_target": data.get("stage1_target", 15000),
-            "stage2_target": data.get("stage2_target", 60000),
+            "training":    age < 120,
+            "stage":       data.get("stage", ""),
+            "best_val":    best,
+            "step":        last.get("step"),
+            "val":         last.get("val"),
+            "train":       last.get("train"),
+            "updated_ago": int(age),
         })
     return jsonify({
         "training": False, "stage": "Stage 2 · Mid",
-        "best_val": 3.3355, "step": 75800,
-        "val": 3.3355, "train": 2.86,
+        "best_val": ALL_TIME_BEST, "step": 60000,
+        "val": 3.3105, "train": 2.86,
         "updated_ago": 999, "_is_sample": True,
-        "stage1_target": 15000,
-        "stage2_target": 60000,
     })
 
 
@@ -229,13 +208,14 @@ def push_graph():
 @app.route("/api/debug")
 def api_debug():
     """Check JSONBin config and connectivity."""
-    runs, info = jsonbin_read_debug()
+    has_bin = bool(JSONBIN_BIN_ID)
+    has_key = bool(JSONBIN_API_KEY)
+    runs = jsonbin_read()
     return jsonify({
-        "jsonbin_bin_id_set": bool(JSONBIN_BIN_ID),
-        "jsonbin_api_key_set": bool(JSONBIN_API_KEY),
+        "jsonbin_bin_id_set": has_bin,
+        "jsonbin_api_key_set": has_key,
         "runs_loaded": runs is not None,
         "run_count": len(runs) if runs else 0,
-        "detail": info,
     })
 
 

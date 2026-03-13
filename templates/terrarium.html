@@ -526,37 +526,44 @@ async function loadData() {
   const stage = d.stage || '';
   const S1_TARGET = d.stage1_target || 15000;
   const S2_TARGET = d.stage2_target || 60000;
-  const s1steps = Math.min(last.step, S1_TARGET);
-  const s2steps = Math.max(0, last.step - S1_TARGET);
-  const s2done  = s2steps >= S2_TARGET || (!d.training && s2steps > 0);
-  if (stage.includes('1') && !stage.includes('2')) {
+  const inS1 = stage.includes('1') && !stage.includes('2');
+  const inS2 = stage.includes('2');
+
+  // s1: full if we're in s2, else current step capped at target
+  const s1steps = inS2 ? S1_TARGET : Math.min(last.step || 0, S1_TARGET);
+  // s2: only count steps if actually in stage 2, reset to 0 otherwise
+  const s2steps = inS2 ? Math.min(last.step || 0, S2_TARGET) : 0;
+  const s2done  = inS2 && s2steps >= S2_TARGET;
+
+  if (inS1) {
     document.getElementById('s1-tag').textContent = 'active';
     document.getElementById('s1-tag').className   = 'tag tag-green';
     document.getElementById('s2-tag').textContent = 'waiting';
     document.getElementById('s2-tag').className   = 'tag tag-dim';
-  } else if (stage.includes('2')) {
+  } else if (inS2) {
     document.getElementById('s1-tag').textContent = 'done';
     document.getElementById('s1-tag').className   = 'tag tag-dim';
-    if (s2done || !d.training) {
+    if (s2done) {
       document.getElementById('s2-tag').textContent = 'done';
       document.getElementById('s2-tag').className   = 'tag tag-dim';
     } else {
-      document.getElementById('s2-tag').textContent = 'active';
-      document.getElementById('s2-tag').className   = 'tag tag-purple';
+      document.getElementById('s2-tag').textContent = d.training ? 'active' : 'paused';
+      document.getElementById('s2-tag').className   = d.training ? 'tag tag-purple' : 'tag tag-dim';
     }
+  } else {
+    // sleeping / unknown — reset both to dash
+    document.getElementById('s1-tag').textContent = '—';
+    document.getElementById('s1-tag').className   = 'tag tag-dim';
+    document.getElementById('s2-tag').textContent = '—';
+    document.getElementById('s2-tag').className   = 'tag tag-dim';
   }
+
   document.getElementById('s1-bar').style.width   = (s1steps/S1_TARGET*100).toFixed(1) + '%';
-  document.getElementById('s2-bar').style.width   = (Math.min(s2steps,S2_TARGET)/S2_TARGET*100).toFixed(1) + '%';
+  document.getElementById('s2-bar').style.width   = (s2steps/S2_TARGET*100).toFixed(1) + '%';
   document.getElementById('s1-steps').textContent = fmtStepK(s1steps) + ' steps';
+  document.getElementById('s2-steps').textContent = fmtStepK(s2steps) + ' steps';
   document.getElementById('s1-target-label').textContent = fmtStepK(S1_TARGET);
   document.getElementById('s2-target-label').textContent = fmtStepK(S2_TARGET);
-  // if not actively training, show stage 2 as complete
-  if (!d.training) {
-    document.getElementById('s2-bar').style.width = '100%';
-    document.getElementById('s2-steps').textContent = fmtStepK(S2_TARGET) + ' steps';
-  } else {
-    document.getElementById('s2-steps').textContent = fmtStepK(s2steps) + ' steps';
-  }
   document.getElementById('sb-stage-sub').textContent = stage;
 }
 
